@@ -18,13 +18,13 @@ if (!MONGODB_URI) {
 }
 
 // Configuración del Middleware
-app.use(cors()); // Permite solicitudes de cualquier origen
+app.use(cors()); 
 app.use(express.json());
 app.use('/api/products', productRouter);
 
 // Configuración de Swagger UI usando swagger.json
 try {
-    // Usamos path.resolve para asegurarnos de que el archivo swagger.json esté en la ubicación correcta
+    
     const swaggerDocument = require(path.resolve(__dirname, '../swagger.json')); // Carga el archivo JSON desde la carpeta dist o src
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     console.log('Swagger documentation is ready at /api-docs');
@@ -32,7 +32,7 @@ try {
     console.error('Error loading Swagger documentation:', error);
 }
 
-// Conexión a MongoDB y luego inicio del servidor Express
+
 mongoose.connect(MONGODB_URI)
     .then(() => {
         console.log('MongoDB connected');

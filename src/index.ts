@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cors from 'cors'; // Importa CORS
 import productRouter from './routes/productRoutes';
 import swaggerUi from 'swagger-ui-express';
+import path from 'path'; // Importa path para resolver las rutas
 
 dotenv.config();
 
@@ -23,7 +24,8 @@ app.use('/api/products', productRouter);
 
 // Configuración de Swagger UI usando swagger.json
 try {
-    const swaggerDocument = require('./swagger.json'); // Carga el archivo JSON
+    // Usamos path.resolve para asegurarnos de que el archivo swagger.json esté en la ubicación correcta
+    const swaggerDocument = require(path.resolve(__dirname, '../swagger.json')); // Carga el archivo JSON desde la carpeta dist o src
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     console.log('Swagger documentation is ready at /api-docs');
 } catch (error) {

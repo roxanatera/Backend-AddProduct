@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import productRouter from './routes/productRoutes';
 import swaggerUi from 'swagger-ui-express';
-import path from 'path';
 
 dotenv.config();
 
@@ -17,11 +16,12 @@ if (!MONGODB_URI) {
     process.exit(1);
 }
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use('/api/products', productRouter);
 
-
+// Configuración dinámica de Swagger
 const swaggerSpec = {
     swagger: "2.0",
     info: {
@@ -29,9 +29,9 @@ const swaggerSpec = {
         version: "1.0.0",
         title: "API de Productos"
     },
-    host: "localhost:5000",
+    host: process.env.NODE_ENV === 'production' ? `${process.env.HOST}` : `localhost:${PORT}`,
     basePath: "/api",
-    schemes: ["http"],
+    schemes: process.env.NODE_ENV === 'production' ? ["https"] : ["http"],
     paths: {
         "/products": {
             get: {
@@ -120,12 +120,16 @@ const swaggerSpec = {
         }
     }
 };
-// Configurar Swagger UI con el objeto
+
+// Configurar Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-export default app;
+// Agregar una ruta básica para evitar el mensaje "Cannot GET /"
+app.get('/', (req, res) => {
+    res.send('Bienvenido a la API de Productos. Visita <a href="/api-docs">/api-docs</a> para la documentación.');
+});
 
-
+// Conexión a MongoDB y ejecución del servidor
 mongoose.connect(MONGODB_URI)
     .then(() => {
         console.log('MongoDB connected');
@@ -137,3 +141,5 @@ mongoose.connect(MONGODB_URI)
     .catch((error) => {
         console.error('MongoDB connection error:', error);
     });
+
+export default app;

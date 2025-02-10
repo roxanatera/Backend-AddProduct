@@ -1,9 +1,6 @@
 
----
-
 ### **README para LinkedIn - Backend**
 
-```markdown
 # Product Admin App - Backend
 
 **Product Admin App - Backend** es una API RESTful que permite gestionar productos de un catálogo. Está construida con **Node.js**, **Express**, **MongoDB** y **Swagger** para la documentación de la API.
